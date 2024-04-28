@@ -1,0 +1,11 @@
+/eldewrito/
+docker-compose.yml
+
+# Ignore some python files
+__pycache__/
+venv/
+.env
+
+# init.py
+eldewrito-server-hosting/
+eldewrito
