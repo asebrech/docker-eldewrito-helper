@@ -47,7 +47,7 @@ def generate_docker_compose(config):
                     f"SIGNAL_SERVER_PORT={starting_port + 3}",
                     f"FILE_SERVER_PORT={starting_port + 4}",
                     f"INSTANCE_ID={instance_name}",
-                    f"SERVER_NAME=\"{server['server_name']} #{i}\"",
+                    f"SERVER_NAME=\"{server['server_name']} | {i}\"",
                     f"SERVER_MESSAGE=\"{server['server_message']}\"",
                     f"CHAT_LOG=logs/chat_server_{instance_name}.log",
                     f"VOTING_JSON_PATH=/config/voting/voting_{instance_suffix}.json",
