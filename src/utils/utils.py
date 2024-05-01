@@ -15,3 +15,6 @@ def name_to_suffix(name):
     words = name.split(' ')
     suffix = '_'.join(word.lower() for word in words)
     return suffix
+
+def remove_items(list_server_hosting, items_to_remove):
+    return [x for x in list_server_hosting if x not in items_to_remove]

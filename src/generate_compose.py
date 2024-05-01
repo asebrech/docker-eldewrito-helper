@@ -3,7 +3,6 @@ import yaml
 from src.utils.utils import name_to_suffix
 
 def generate_docker_compose(config):
-    print(config)
     template = {
         "services": {},
     }
