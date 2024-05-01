@@ -1,18 +1,25 @@
 import yaml
 
+from src.utils.utils import name_to_suffix
+
 def generate_docker_compose(config):
+    print(config)
     template = {
         "services": {},
     }
 
     total_instances = 0
+    for server in config['server']:
+        total_instances += int(server['server_intance'])
+    starting_port = 11764
 
     for server in config['server']:
         num_instances = int(server['server_intance'])
+        instance_suffix = name_to_suffix(server['selected_server'])
         for i in range(1, num_instances + 1):
             total_instances += 1
-            instance_name = f"{server['selected_server'].replace(' ', '_').lower()}_{num_instances}"
-            starting_port = 11774 + (total_instances - 1) * 10
+            instance_name = f"{instance_suffix}_{i}"
+            starting_port += 10
             template["services"][instance_name] = {
                 "image": "eldewrito:image",
                 "depends_on": ["_image_build"],
@@ -33,20 +40,20 @@ def generate_docker_compose(config):
                 ],
                 "environment": [
                     f"ED_CFG_VERSION=0.7.0",
-                    f"SERVER_HOST={config['host_name']}",
-                    f"RCON_PASSWORD={config['rcon_password']}",
+                    f"SERVER_HOST=\"{config['host_name']}\"",
+                    f"RCON_PASSWORD=\"{config['rcon_password']}\"",
                     f"GAME_PORT={starting_port}",
                     f"PORT={starting_port + 1}",
                     f"RCON_PORT={starting_port + 2}",
                     f"SIGNAL_SERVER_PORT={starting_port + 3}",
                     f"FILE_SERVER_PORT={starting_port + 4}",
-                    f"INSTANCE_ID={i}",
-                    f"SERVER_NAME={server['server_name']}",
-                    f"SERVER_MESSAGE={server['server_message']}",
+                    f"INSTANCE_ID={instance_name}",
+                    f"SERVER_NAME=\"{server['server_name']} #{i}\"",
+                    f"SERVER_MESSAGE=\"{server['server_message']}\"",
                     f"CHAT_LOG=logs/chat_server_{instance_name}.log",
+                    f"VOTING_JSON_PATH=/config/voting/voting_{instance_suffix}.json",
                     f"VOTING_SYSTEM_TYPE=1",
-                    f"VOTING_TIME=15",
-                    f"VOTING_JSON_PATH=/config/voting{i}.json"
+                    f"VOTING_TIME=15"
                 ]
             }
 
@@ -54,15 +61,9 @@ def generate_docker_compose(config):
         "image": "eldewrito:image",
         "command": ["echo", "build completed"],
         "build": {
-            "context": ".",
+            "context": "./docker-eldewrito",
             "dockerfile": "Dockerfile"
         }
     }
 
     return yaml.dump(template)
-
-if __name__ == "__main__":
-    config = {'host_name': 'jhgvf', 'rcon_password': 'fef', 'server': [{'selected_server': 'Reach Anniversary', 'server_name': 'fef', 'server_message': 'fefe', 'server_intance': '2'}, {'selected_server': 'Halo Online', 'server_name': 'fee', 'server_message': 'fefef', 'server_intance': '1'}]}
-    docker_compose_content = generate_docker_compose(config)
-    with open("docker-compose.yml", "w") as f:
-        f.write(docker_compose_content)

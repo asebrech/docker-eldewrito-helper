@@ -7,7 +7,7 @@ class Config:
 
     def __init__(self):
         self.list_server_path = self.get_list_server_hosting()
-        self.list_server_option = [x for x in self.list_server_path if x != '0. Stock maps and gametypes']
+        self.list_server_option = [x for x in self.list_server_path if x != '0. Stock maps and gametypes' and x != "6. Minimal example"]
         self.list_server_suffix = self.list_to_name()
         self.list_server_name = self.list_to_name()
 
