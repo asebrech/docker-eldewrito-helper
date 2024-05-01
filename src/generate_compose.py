@@ -25,7 +25,7 @@ def generate_docker_compose(config):
                 "restart": "always",
                 "volumes": [
                     "./eldewrito:/game",
-                    "./scripts:/scripts",
+                    "./docker-eldewrito/scripts:/scripts",
                     f"./eldewrito/data:/config"
                 ],
                 "working_dir": "/game",
